@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# myshow
 
-## Getting Started
+深色主题、星空背景的个人作品集与博客网站。
 
-First, run the development server:
+## 技术栈
+
+- **Next.js 15**（App Router）+ TypeScript（严格模式）
+- **Tailwind CSS v4** + CSS 变量（强调色可配置）
+- 原生 Canvas 2D 星空背景
+- Markdown（unified + remark/rehype + Shiki 代码高亮）
+- Supabase（联系表单留言持久化，可选）
+
+## 功能
+
+- 单页布局：首页 Hero、关于、项目、博客、联系五个区块（锚点滚动）
+- 项目 / 博客详情页（Markdown 渲染、代码高亮、目录 TOC）
+- 联系表单（zod 校验 + 成功/失败反馈）
+- 深色主题 + 可配置强调色，响应式 + 无障碍支持
+
+## 快速开始
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev   # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 内容管理
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- 站点配置（姓名、职位、强调色、社交链接）：`content/data/site.ts`
+- 技能：`content/data/skills.ts`
+- 经历/教育：`content/data/timeline.ts`
+- 博客正文：`content/blog/*.md`
+- 项目正文：`content/projects/*.md`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+新增 `.md` 文件后，首页列表会通过 ISR 自动更新。
 
-## Learn More
+## 环境变量（可选）
 
-To learn more about Next.js, take a look at the following resources:
+联系表单默认降级为「仅日志」。如需持久化，复制 `.env.local.example` 为 `.env.local` 并配置：
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 脚本
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run dev        # 开发
+npm run build      # 生产构建
+npm run lint       # ESLint
+npm run typecheck  # TypeScript 类型检查
+```
