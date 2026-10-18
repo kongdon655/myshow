@@ -32,7 +32,26 @@ npm run dev   # http://localhost:3000
 - 博客正文：`content/blog/*.md`
 - 项目正文：`content/projects/*.md`
 
-新增 `.md` 文件后，首页列表会通过 ISR 自动更新。
+新增 `.md` 文件后，重新构建（`npm run build`）即可更新列表（静态导出，配合 Cloudflare Pages 自动部署）。
+
+## 部署到 Cloudflare Pages
+
+项目已配置静态导出（`next.config.ts` 的 `output: "export"`），构建产物输出到 `out/`。
+
+方式一：Git 集成（推荐，自动部署）
+
+1. Cloudflare 控制台 → Workers & Pages → Create → Pages → Connect to Git
+2. 选择本仓库，构建设置：
+   - Build command：`npm run build`
+   - Build output directory：`out`
+3. 保存并部署，即可获得 `xxx.pages.dev` 域名
+
+方式二：本地直接上传
+
+```bash
+npm run build
+npx wrangler pages deploy out
+```
 
 ## 环境变量（可选）
 

@@ -1,13 +1,8 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { z } from "zod";
-
-const schema = z.object({
-  name: z.string().trim().min(1, "请输入姓名").max(100, "姓名过长"),
-  email: z.string().trim().email("请输入有效的邮箱地址"),
-  message: z.string().trim().min(1, "请输入留言内容").max(2000, "内容过长"),
-});
+import { contactSchema } from "@/lib/validation";
+import { submitContact } from "@/lib/db";
 
 type FieldErrors = Partial<Record<"name" | "email" | "message", string>>;
 type Status = "idle" | "submitting" | "success" | "error";
@@ -29,7 +24,7 @@ export function ContactForm() {
     // honeypot：隐藏字段被机器人填写则静默丢弃
     if (values.website) return;
 
-    const parsed = schema.safeParse(values);
+    const parsed = contactSchema.safeParse(values);
     if (!parsed.success) {
       const next: FieldErrors = {};
       for (const issue of parsed.error.issues) {
@@ -44,12 +39,7 @@ export function ContactForm() {
     setErrors({});
     setStatus("submitting");
     try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(parsed.data),
-      });
-      if (!res.ok) throw new Error("提交失败");
+      await submitContact(parsed.data);
       setValues(empty);
       setStatus("success");
       setFeedback("留言已发送，感谢你的联系！");

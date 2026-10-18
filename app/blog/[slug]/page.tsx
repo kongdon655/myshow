@@ -5,8 +5,6 @@ import { extractToc, renderMarkdown } from "@/lib/markdown";
 import { Markdown } from "@/components/markdown/Markdown";
 import { TOC } from "@/components/markdown/TOC";
 
-export const revalidate = 60;
-
 export function generateStaticParams() {
   return getBlogPosts().map((p) => ({ slug: p.slug }));
 }

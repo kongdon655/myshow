@@ -10,8 +10,6 @@ import { skillGroups } from "@/content/data/skills";
 import { timeline } from "@/content/data/timeline";
 import { getProjects, getBlogPosts } from "@/lib/posts";
 
-export const revalidate = 60;
-
 export default function Home() {
   const projects = getProjects();
   const posts = getBlogPosts();

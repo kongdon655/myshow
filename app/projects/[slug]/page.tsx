@@ -4,8 +4,6 @@ import { getProject, getProjects } from "@/lib/posts";
 import { renderMarkdown } from "@/lib/markdown";
 import { Markdown } from "@/components/markdown/Markdown";
 
-export const revalidate = 60;
-
 export function generateStaticParams() {
   return getProjects().map((p) => ({ slug: p.slug }));
 }
