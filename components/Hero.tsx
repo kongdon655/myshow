@@ -1,7 +1,11 @@
+"use client";
+
 import Link from "next/link";
-import { site } from "@/content/data/site";
+import { useSiteData } from "@/lib/site-data";
 
 export function Hero() {
+  const { site } = useSiteData();
+
   return (
     <section
       id="hero"

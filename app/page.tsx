@@ -1,51 +1,19 @@
 import { Hero } from "@/components/Hero";
-import { Skills } from "@/components/Skills";
-import { Timeline } from "@/components/Timeline";
+import { AboutSection } from "@/components/AboutSection";
 import { ProjectCard } from "@/components/ProjectCard";
 import { BlogCard } from "@/components/BlogCard";
 import { ContactForm } from "@/components/ContactForm";
-import { CopyEmail } from "@/components/CopyEmail";
-import { site } from "@/content/data/site";
-import { skillGroups } from "@/content/data/skills";
-import { timeline } from "@/content/data/timeline";
+import { ContactInfo } from "@/components/ContactInfo";
 import { getProjects, getBlogPosts } from "@/lib/posts";
 
 export default function Home() {
   const projects = getProjects();
   const posts = getBlogPosts();
-  const experiences = timeline.filter((t) => t.type === "experience");
-  const education = timeline.filter((t) => t.type === "education");
 
   return (
     <>
       <Hero />
-
-      <section id="about" className="scroll-mt-24 border-t border-line">
-        <div className="mx-auto max-w-[1200px] px-6 py-20">
-          <h2 className="text-2xl font-semibold sm:text-3xl">关于我</h2>
-          <div className="mt-6 max-w-2xl space-y-4 text-muted">
-            {site.bio.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-          </div>
-
-          <div className="mt-12 grid gap-10 lg:grid-cols-2">
-            <div>
-              <h3 className="mb-5 text-lg font-medium text-muted">工作经历</h3>
-              <Timeline items={experiences} />
-            </div>
-            <div>
-              <h3 className="mb-5 text-lg font-medium text-muted">教育背景</h3>
-              <Timeline items={education} />
-            </div>
-          </div>
-
-          <div className="mt-14">
-            <h3 className="mb-6 text-lg font-medium text-muted">技能</h3>
-            <Skills groups={skillGroups} />
-          </div>
-        </div>
-      </section>
+      <AboutSection />
 
       <section id="projects" className="scroll-mt-24 border-t border-line">
         <div className="mx-auto max-w-[1200px] px-6 py-20">
@@ -80,34 +48,7 @@ export default function Home() {
             <div className="max-w-xl">
               <ContactForm />
             </div>
-
-            <div className="space-y-6">
-              <div className="rounded-2xl border border-line bg-surface p-6">
-                <h3 className="font-semibold">邮箱</h3>
-                <p className="mt-2 flex flex-wrap items-center gap-2 text-muted">
-                  <span className="break-all">{site.email}</span>
-                  <CopyEmail email={site.email} />
-                </p>
-              </div>
-
-              <div className="rounded-2xl border border-line bg-surface p-6">
-                <h3 className="font-semibold">社交链接</h3>
-                <ul className="mt-3 space-y-2">
-                  {site.socials.map((s) => (
-                    <li key={s.href}>
-                      <a
-                        href={s.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-muted transition-colors hover:text-accent"
-                      >
-                        {s.label} ↗
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+            <ContactInfo />
           </div>
         </div>
       </section>

@@ -3,13 +3,14 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { site } from "@/content/data/site";
+import { useSiteData } from "@/lib/site-data";
 
 function sectionId(href: string): string {
   return href.replace(/^\/#/, "");
 }
 
 export function Navbar() {
+  const { site } = useSiteData();
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("hero");
   const pathname = usePathname();
@@ -37,7 +38,7 @@ export function Navbar() {
       if (el) observer.observe(el);
     }
     return () => observer.disconnect();
-  }, [isHome, pathname]);
+  }, [isHome, pathname, site.nav]);
 
   useEffect(() => {
     if (!open) return;
@@ -81,22 +82,30 @@ export function Navbar() {
           ))}
         </ul>
 
-        <button
-          type="button"
-          className="flex h-10 w-10 items-center justify-center rounded-lg text-foreground md:hidden"
-          aria-expanded={open}
-          aria-controls="mobile-menu"
-          onClick={() => setOpen((v) => !v)}
-        >
-          <span className="sr-only">{open ? "关闭菜单" : "打开菜单"}</span>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            {open ? (
-              <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-            ) : (
-              <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-            )}
-          </svg>
-        </button>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/admin"
+            className="rounded-full border border-line px-4 py-1.5 text-sm text-muted transition-colors hover:border-accent hover:text-foreground"
+          >
+            登录
+          </Link>
+          <button
+            type="button"
+            className="flex h-10 w-10 items-center justify-center rounded-lg text-foreground md:hidden"
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            onClick={() => setOpen((v) => !v)}
+          >
+            <span className="sr-only">{open ? "关闭菜单" : "打开菜单"}</span>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              {open ? (
+                <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              ) : (
+                <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              )}
+            </svg>
+          </button>
+        </div>
       </nav>
 
       {open && (

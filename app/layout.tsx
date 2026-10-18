@@ -3,6 +3,7 @@ import type { CSSProperties } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { site } from "@/content/data/site";
+import { SiteDataProvider } from "@/lib/site-data";
 import { Starfield } from "@/components/Starfield";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -32,9 +33,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Starfield />
-        <Navbar />
-        <main className="relative z-10 min-h-screen">{children}</main>
-        <Footer />
+        <SiteDataProvider>
+          <Navbar />
+          <main className="relative z-10 min-h-screen">{children}</main>
+          <Footer />
+        </SiteDataProvider>
       </body>
     </html>
   );

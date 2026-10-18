@@ -1,6 +1,10 @@
-import { site } from "@/content/data/site";
+"use client";
+
+import { useSiteData } from "@/lib/site-data";
 
 export function Footer() {
+  const { site } = useSiteData();
+
   return (
     <footer className="relative z-10 border-t border-line">
       <div className="mx-auto flex max-w-[1200px] flex-col items-center justify-between gap-4 px-6 py-8 sm:flex-row">

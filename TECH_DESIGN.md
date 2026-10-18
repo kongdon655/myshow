@@ -145,7 +145,22 @@ draft: false
 | `status` | text | 状态：`new` / `read`（默认 `new`） |
 | `created_at` | timestamptz | 提交时间 |
 
-> 站点级配置（姓名、职位、强调色、社交链接）集中在 `content/data/site.ts`，作为「强调色可配置」的唯一来源。
+> 站点级配置（姓名、职位、强调色、社交链接）默认集中在 `content/data/site.ts`，作为「强调色可配置」的唯一来源；配置 Supabase 后由后台 `/admin` 在线覆盖。
+
+### 3.6 后台可编辑内容（Supabase，可选）
+
+后台 `/admin` 用于在线修改「个人信息等」，数据存 Supabase，站点前端在客户端拉取并覆盖静态默认值。相关表与函数定义在 `supabase/schema.sql`：
+
+| 对象 | 说明 |
+|---|---|
+| `site_settings`（id=1 单行） | 姓名、职位、一句话介绍、邮箱、头像文字、强调色、个人简介（`text[]`） |
+| `social_links` | 社交链接（label + href + sort_order） |
+| `skills` | 技能（category + name + icon + level + sort_order） |
+| `timeline_items` | 经历/教育（type/title/org/start_date/end_date/description + sort_order） |
+| `admin_secret`（id=1 单行） | 后台密码哈希（sha256），匿名不可读 |
+| `admin_*` 函数 | `admin_verify` / `admin_save_*` / `admin_set_password` / `admin_is_configured` / `admin_setup_password`，均为 `security definer`，内部校验密码 |
+
+安全模型：RLS 只允许匿名**读**公开内容、**插入** `contact_messages`；所有写操作走 `security definer` 函数并在数据库侧校验密码，匿名无法直接改表、也读不到 `admin_secret`。`schema.sql` 会写入默认后台密码 `123456`（sha256 哈希），首次登录后到后台改为强密码；若未设置密码，则用 `admin_setup_password`（仅在未设置时可用）引导设置，避免「无密码无法登录、无法登录无法设密码」的循环。
 
 ---
 
@@ -190,3 +205,9 @@ draft: false
 ### 4.7 SEO 与元数据
 - 使用 Next.js `Metadata` API 生成标题、描述、Open Graph；动态页（博客/项目）从 frontmatter 注入。
 - 提供 `sitemap.ts` / `robots.ts`，提升收录。
+
+### 4.8 后台管理与静态导出兼容
+- 站点使用 `output: "export"`（静态导出到 `out/`，部署 Cloudflare Pages），**无 Server Action / Route Handler**，因此后台与联系表单都走「浏览器直连 Supabase」：公开读 + 写操作经 `security definer` RPC 在数据库侧校验密码。
+- `lib/site-data.tsx` 提供 `SiteDataProvider`：客户端 `useEffect` 拉取 `site_settings`/`social_links`/`skills`/`timeline_items`，有数据则覆盖 `content/data/*.ts` 的静态默认值，并把 `accent` 同步到 CSS 变量 `--accent`；拉取失败或未配置时静默回退默认值，保证静态站始终可渲染。
+- `lib/admin.ts` 封装所有后台 RPC；`app/admin/page.tsx` 是纯客户端后台表单（基本信息 / 社交链接 / 技能 / 时间线 / 改密），首次进入通过 `admin_is_configured` 判断是否展示「设置初始密码」。
+- 联系表单 `lib/db.ts` 直接向 `contact_messages` 插入（RLS 只允许 anon insert），未配置 Supabase 时降级为仅日志。
