@@ -5,12 +5,12 @@ export type Social = { label: string; href: string };
 export type NavItem = { label: string; href: string };
 
 export const site = {
-  name: "陈墨",
+  name: "王世瑞",
   title: "全栈开发工程师",
   tagline: "用代码构建优雅、高性能的 Web 体验，专注前端工程与用户体验。",
   email: "hello@example.com",
   /** 头像首字母（在圆形渐变中展示） */
-  avatar: "陈墨",
+  avatar: "王世瑞",
   /** 强调色（十六进制），全站可配置 */
   accent: "#6c8cff",
   bio: [
